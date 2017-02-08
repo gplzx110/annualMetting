@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+    <meta name="viewport" content="target-densitydpi=device-dpi,width=375,user-scalable=no" />
+	<title>新年许愿</title>
+	<link rel="stylesheet" href="css/wishes.css">
+</head>
+<body>
+	<div class="wishes-page" id="vm-main">
+		<ul class="wishes-list" v-bind:class="{show: init.show}">
+			<li v-bind:class="item.styleClass" v-for="item in wishList">
+				<img v-bind:src="item.src">
+				<span class="detail">{{ item.vowContent }}</span>
+			</li>
+		</ul>
+		<div class="inp-wrap" v-bind:class="{show: showInp}">
+			<input v-on:focus="inpFocus" v-on:keyup.13="submitWish" v-model="myWish" type="text" placeholder="请输入您的新年愿望(30字以内)">
+			<span v-show="myWish" class="btn-send" v-on:click="submitWish">发送</span>
+		</div>
+
+		<!-- 提示框 -->
+		<div class="modal-layout" v-bind:class="{ show: tip.show }" v-on:click="tip.show = !tip.show"></div>
+		<div class="msg-tip" v-bind:class="{ show: tip.show }">
+			<div class="msg" v-html="tip.msg">
+				{{ tip.msg }}
+			</div>
+			<div class="btn-submit mt20" v-on:click="tip.show = !tip.show">确定</div>
+		</div>
+		<!-- 提示框 -->
+	</div>
+	<script data-main="js/app/wishes.js?t=995" src="lib/require.js"></script>
+</body>
+</html>

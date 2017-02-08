@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<title> 2017吉胜科技年会 </title>
+<meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, width=device-width" />
+<link rel="stylesheet" type="text/css" href="css/home.css" />
+</head>
+<body>
+
+<div class="m-contents home-contents" id="vm-main">
+
+	<div id="pull-down">下拉刷新...</div>
+	<div class="fixed-main" v-if="init.show" id="fixed-main">
+		<div id="scroller">
+			<div class="top-tt">
+				<a href="./historyPerform.html"><img src="images/home/top-live-ico.jpg" class="top-live-ico" alt="历年节目" /></a>
+				<img src="images/home/top-tt.jpg" class="tt" alt="2017吉胜科技年会" />
+				<div class="i-explain" v-on:click="showExplain()"><i class="icon icon-qst"></i>说明</div>
+			</div>
+			<div class="top-video" v-bind:class="{ show: init.liveing == false }" v-if="init.liveing == false"><img src="images/home/top-video.jpg" /></div>
+			<div class="top-video" v-bind:class="{ show: init.liveing == true }" v-else-if="init.liveing == true">
+				<img src="images/home/top-video-play.jpg" v-on:click="showLive()" />
+			</div>
+			<div class="top-video" v-bind:class="{ show: init.liveing == 'show' }" v-else v-html="init.video"></div>
+
+			<div class="midd-banner" v-if="init.banner"><a v-bind:href="init.banner_href"><img v-bind:src="init.banner" /></a></div>
+
+			<div class="p-list" v-bind:class="{ show: init.show }">
+				<ul>
+					<li v-for="item in program_list">
+						<div>
+							<div class="no fl">{{ item.no }}</div>
+							<div class="pname fl">{{ item.name }}</div>
+							<div class="team fl" v-bind:class="[item.teamKey]"><img v-bind:src="'images/team/'+ item.teamKey +'-s.png'" />{{ item.teamName }}</div>
+
+							<div class="actors clear">表演者：{{ item.actors }}</div>
+						</div>
+
+						<!-- 点赞&分数 -->
+						<div class="psorce" v-if="item.status > 0">
+							<span><img src="images/home/ico-good-org-s.png" alt="点赞数" /> {{ item.followNum }}</span>
+						</div>
+
+						<div class="pimgs" v-if="item.status > 0 && item.pic.length">
+							<div v-for="img in item.pic"><img v-bind:src="img" v-on:click="previewImg(img)" /></div>
+						</div>
+						<div class="clear"></div>
+
+						<div class="bot-opts clear" v-if="item.status != 0">
+							<span class="red" v-if="user.is_friend">给节目点赞，即有机会抢红包！</span><!-- 亲友显示 -->
+							<span class="red" v-else>&nbsp;</span>
+
+							<div class="fr org" 
+								v-if="!user.is_visitor" 
+								v-on:click="addComment(item.id, $event)"
+							>
+								<img src="images/home/ico-commet-org.png" class="ico-commet" />评论
+							</div>
+							<div class="fr org" 
+								v-if="!user.is_visitor && item.followFlag == 2 && (item.status == 1 || item.status == 2)"
+								v-on:click="addSupport(item.id)"
+							>
+								<img src="images/home/ico-good-org.png" class="ico-good" />赞
+							</div>
+						</div>
+
+						<div class="good-list" v-if="item.followName && item.followName != ''">
+							<img src="images/home/ico-good-blue.png" /> <span>{{ item.followName }}</span>
+						</div>
+
+						<div class="comment-list" v-if="item.commentList.length">
+							<ul>
+								<li v-for="comment in item.commentList" v-if="!item.hide_comment || comment.show">
+									<div class="mt">
+										<span class="name">{{ comment.userName }}：</span>
+										<span class="content">{{ comment.content }}</span>
+									</div>
+									<img src="images/home/ico-delete.png" class="ico-delete fr" alt="删除" v-if="user.is_manager" v-on:click="deleteComment(comment.id)" />
+								</li>
+							</ul>
+							<div class="open-close" v-if="item.hide_comment_count > 0 && item.hide_comment" v-on:click="toggleComment(item.id)">展开全部评论》</div>
+							<div class="open-close" v-else-if="item.hide_comment_count > 0" v-on:click="toggleComment(item.id)">收起评论》</div>
+						</div>
+
+						<div class="btn-sorce" 
+							v-if="(user.is_staff || user.is_guest) && item.scoreFlag == 2 && (item.status == 1 || item.status == 2)" 
+							v-on:click="showScoring(item.id)">
+							打分
+						</div>
+						<div class="total-sorce" v-if="item.status == 3">节目得分 {{ item.score }}</div>
+						
+						<div class="btn-status" v-if="item.status == 0">未开始</div>
+						<div class="pstatus" v-if="item.status == 1"><img src="images/home/live.png" alt="正在直播" /></div>
+						<div class="pstatus over" v-if="item.status == 2 || item.status == 3">已结束</div>
+
+						<div class="clear"></div>
+		            </li>
+
+				</ul>
+			</div>
+		</div>
+	</div>
+
+	<div class="bottom-menu-station"></div>
+
+	<div class="modal-layout" v-bind:class="{ show: scoring.show }" v-on:click="scoring.show = !scoring.show"></div>
+	<!-- 我的打分 -->
+	<div class="dialog-set-sorce" v-bind:class="{ show: scoring.show }">
+		<div class="form">
+			<div class="fl">我的打分</div>
+			<div class="fr">
+				<input type="tel" name="sorce" maxlength="3" v-model.number="scoring.score" />
+				<div class="mt10" v-bind:class="{ red: !scoring.ok }">打分区间：60-100分（整数）</div>
+			</div>
+			<div class="clear"></div>
+		</div>
+
+		<div class="btn-submit mt20" v-on:click="saveScoring()">提交</div>
+	</div>
+
+	<!-- 导航菜单 -->
+	<div v-if="! add_comment.show" is="tpl_bottom_menu" 
+			v-bind:sed_video="true"
+			v-bind:user="user"
+			v-bind:txt_blessing="(user.is_staff || user.is_guest) ? '福卡' : '红包'"
+	></div>
+
+	<div class="add_comment" v-bind:class="{ show: add_comment.show }">
+		<input type="text" name="comment" id="comment_content" maxlength="20" placeholder="请输入评论" v-model.trim="add_comment.content" v-focus />
+		<span class="btn" v-on:click="addComment()" v-if="add_comment.content != ''">发送</span>
+		<span class="btn" v-on:click="addComment()" v-else>取消</span>
+	</div>
+
+	<div class="modal-layout modal-teamface-rank" 
+		v-if="!user.is_visitor"
+		v-bind:class="{ show: team.modal_face_show }"
+		v-on:click="team.modal_face_show = false"
+	>
+		<a href="./rank-team-face.html"><img src="images/home/dailog-rank-face.png" alt="团队颜值比拼" /></a>
+	</div>
+
+	<!-- 图片预览 -->
+	<div class="modal-layout preview-img" 
+		v-bind:class="{ show: preview_img.show }" 
+		v-on:click="preview_img.show = !preview_img.show"
+	>
+		<img 
+			v-if="preview_img.img && preview_img.img != ''" 
+			v-on:click.stop="preview_img.show = false" 
+			v-bind:src="preview_img.img" />
+	</div>
+
+	<!-- 提示框 --><div is="dialogtip" v-bind:tip="tip"></div>
+
+</div>
+
+<div class="dialog-tip" id="dialog-tip-loading"><div class="tip-loading"></div>正在努力获取数据...</div>
+
+<script data-main="js/app/home.js" src="lib/require.js"></script>
+</body>
+</html>

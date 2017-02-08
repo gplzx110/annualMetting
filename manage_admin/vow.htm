@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>吉胜科技 - 2017年会直播管理后台</title>
+  <link rel="stylesheet" href="lib/bootstrap/css/bootstrap.min.css" />
+  <link rel="stylesheet" href="lib/bootstrap/css/docs.css" />
+  <link rel="stylesheet" href="css/main.css" />
+</head>
+<body>
+  <div class="navbar navbar-inverse navbar-fixed-top">
+      <div class="navbar-inner">
+        <div class="container">吉胜科技 - 2017年会直播管理后台</div>
+      </div>
+    </div>
+
+  <div class="container hide" v-bind:class="{ show: init.show }" id="vm-main">
+    <div class="row-fluid">
+        <div class="span3 bs-docs-sidebar">
+          <ul class="nav nav-list bs-docs-sidenav affix-top">
+            <li><a href="./setting.htm"><i class="icon-chevron-right"></i> 基础设置</a></li>
+            <li><a href="./reward.htm"><i class="icon-chevron-right"></i> 奖品</a></li>
+            <li><a href="./program.htm"><i class="icon-chevron-right"></i> 节目</a></li>
+            <li><a href="./redbag.htm"><i class="icon-chevron-right"></i> 红包</a></li>
+            <li><a href="./team.htm"><i class="icon-chevron-right"></i> 团队</a></li>
+            <li><a href="./vow.htm"><i class="icon-chevron-right"></i> 许愿树</a></li>
+          </ul>
+        </div>
+
+        <div class="span9 contents">
+
+            <table class="table table-hover" v-show="init.show">
+              <thead>
+                <tr>
+                  <th>user_id</th>
+                  <th>姓名</th>
+                  <th>内容</th>
+                  <th>操作</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr v-for="item in list">
+                  <td>{{ item.userId }}</td>
+                  <td>{{ item.name }}</td>
+                  <td>{{ item.content }}</td>
+                  <td>
+                    <span class="btn btn-mini btn-primary" v-on:click="removeItem(item.vowId)">删除</span>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+        </div>
+    </div>
+  </div>
+
+</body>
+</html>
+
+<script type="text/javascript" src="lib/jquery/jquery.min.js"></script>
+<script type="text/javascript" src="lib/vue.js"></script>
+<script type="text/javascript" src="js/comm.js"></script>
+<script type="text/javascript">
+(function() {
+
+  var vm = new Vue({
+      el: '#vm-main',
+      data: {
+        init: {
+            show: true
+        },
+        list: [],
+      },
+      methods: {
+        removeItem: function(id) {
+            if(window.confirm('确定要删除么？')) {
+                comm.ajax('/back/deleteVowTree.html', {params: {vowId: id}, type: 'POST'}, function(response) {
+                    if(! response) {
+                      return;
+                    }
+
+                    app.initList();
+                });
+            }
+        }
+        
+        
+      }
+  });
+
+  var app = {
+      initList: function() {
+        comm.ajax('/back/findAllVowTree.html', {}, function(response) {
+             if(! response) {
+                return;
+             }
+
+             vm.list = response.data;
+          });
+      },
+      init: function() {
+        this.initList();        
+      }
+  };
+
+  app.init();
+
+}());
+</script>

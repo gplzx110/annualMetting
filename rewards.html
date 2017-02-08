@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+    <meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, width=device-width">
+	<title>抽大奖</title>
+	<link rel="stylesheet" href="css/rewards.css">
+</head>
+<body>
+	<div class="rewards-page" id="vm-main">
+		<div v-for="(item, idx) in rewardList" class="reward-item" v-bind:class="{show: init.show}">
+			<div class="reward-header">
+				<div class="sec-header">
+					{{ getLevle(item.level) }}
+				</div>
+				<div>{{ item.name }}<span class="reward-num">份数：<span>{{ item.awardNum }}</span>份</span></div>
+			</div>
+			<a class="reward-wrap" v-bind:href="'rewards-detail.html?id='+ item.id">
+				<div class="pic">
+					<img v-bind:src="item.pic">
+					<div v-show="item.userList && item.userList.length" class="luck-name">获奖：
+						<span v-for="(item,idx) in item.userList">
+							{{ item.userName }}
+						</span>
+					</div>
+				</div>
+				<div class="status">{{ getStatus(item.status) }}</div>
+				<div class="count-time" v-bind:class="{disabled: item.status !==1}" v-html="getCount(item)"></div>
+				<!-- <div class="count-time disabled" v-html="getCount(item.countdownEnd)"></div> -->
+			</a>
+		</div>
+		<div style="height: 70px;"></div>
+		<!-- 导航菜单 -->
+		<div is="tpl_bottom_menu" 
+				v-if="showBottom"
+				v-bind:sed_gift="true"
+				v-bind:user="user"
+				v-bind:txt_blessing="(user.is_staff || user.is_guest) ? '福卡' : '红包'"
+		></div>
+		<!-- 提示框 -->
+		<div class="modal-layout" v-bind:class="{ show: tip.show }" v-on:click="tip.show = !tip.show"></div>
+		<div class="msg-tip" v-bind:class="{ show: tip.show }">
+			<div class="msg">
+				{{ tip.msg }}
+			</div>
+			<div class="btn-submit mt20" v-on:click="tip.show = !tip.show">确定</div>
+		</div>
+		<!-- 提示框 -->
+	</div>
+	<!-- loading -->
+	<div class="dialog-tip" id="dialog-tip-loading"><div class="tip-loading"></div>正在努力获取数据...</div>
+	<!-- loading -->
+	<script data-main="js/app/rewards.js?t=565" src="lib/require.js"></script>
+</body>
+</html>

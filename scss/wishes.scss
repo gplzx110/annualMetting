@@ -1,0 +1,137 @@
+@charset "UTF-8";
+
+@import "_helper";
+@import "_base";
+@import "_base-preheat";
+@import "_normalize";
+
+.wishes-page {
+	position: relative;	
+	width: 100%;
+	height: 100%;
+	background: url(../images/wishes/bg.jpg);
+	
+	background-size: 100% 100%;
+
+	overflow: hidden;
+}
+.list-animate {
+	animation-name: wishMove;
+	animation-timing-function: linear;
+	-webkit-animation-name: wishMove;
+	-webkit-animation-timing-function: linear;
+}
+.wishes-list {
+	display: none;
+	padding-top: 10px;
+	color: #fff;
+	font-size: 14px;
+	li {
+		position: absolute;	
+		top:0;
+		transform: translateX(375px);
+		-webkit-transform: translateX(375px);
+		padding: 2px 10px;
+		white-space:nowrap;
+		img {
+			vertical-align: middle;
+			margin-top: -5px;
+		}
+		&:nth-child(1) {top: 30px;animation-duration: 10s;animation-delay: 2s;-webkit-animation-duration: 10s;-webkit-animation-delay: 2s;}
+		&:nth-child(2) {top: 80px;animation-duration: 14s;animation-delay: 3s;-webkit-animation-duration: 14s;-webkit-animation-delay: 3s;}
+		&:nth-child(3) {top: 130px;animation-duration: 11s;animation-delay: 1.4s;-webkit-animation-duration: 11s;-webkit-animation-delay: 1.4s;}
+		&:nth-child(4) {top: 170px;animation-duration: 7s;animation-delay: 1.8s;-webkit-animation-duration: 7s;-webkit-animation-delay: 1.8s;}
+		&:nth-child(5) {top: 220px;animation-duration: 6s;animation-delay: .3s;-webkit-animation-duration: 6s;-webkit-animation-delay: .3s;}
+		&:nth-child(6) {top: 270px;animation-duration: 22s;animation-delay: 3.6s;-webkit-animation-duration: 22s;-webkit-animation-delay: 3.6s;}
+		&:nth-child(7) {top: 320px;animation-duration: 12s;animation-delay: 1s;-webkit-animation-duration: 12s;-webkit-animation-delay: 1s;}
+		&:nth-child(8) {top: 380px;animation-duration: 9s;animation-delay: 3.3s;-webkit-animation-duration: 9s;-webkit-animation-delay: 3.3s;}
+		&:nth-child(9) {top: 420px;animation-duration: 13s;animation-delay: 1.2s;-webkit-animation-duration: 13s;-webkit-animation-delay: 1.2s;}
+		&:nth-child(10) {top: 470px;animation-duration: 12s;animation-delay: .8s;-webkit-animation-duration: 12s;-webkit-animation-delay: .8s;}
+	}
+}
+.inp-wrap {
+	display: none;
+	position: fixed;
+	z-index: 999;
+	bottom: 20px;
+	background: #fff;
+	height: 44px;
+	width: 90%;
+	left: 5%;
+	border-radius: 3px;
+	overflow: hidden;
+}
+.inp-wrap input {
+	padding: 0 50px 0 30px;
+	width: 85%;
+	height: 100%;
+	box-sizing: border-box;
+	border: none;
+	background: url(../images/icos/icon-love.png) 10px center no-repeat;
+	background-size: 14px;
+	font-size: 14px;
+}
+.btn-send {
+	position: absolute;
+	right: 0;
+	top: 10px;
+	color: #ff7b3e;
+	font-size: 16px;
+	border-left: 1px solid #ff7b3e;
+	line-height: 1.5;
+	padding-left: 6px;
+	padding-right: 10px;
+}
+.btn-send:focus {
+	outline: none;
+}
+.detail {
+	white-space:nowrap;
+}
+.item-small {
+	font-size: 14px;
+	height: 26px;
+	line-height: 26px;
+	img {
+		height: 70%;
+	}
+}
+.item-middle {
+	font-size: 16px;
+	height: 30px;
+	line-height: 30px;
+	img {
+		height: 70%;
+	}
+}
+.item-big {
+	font-size: 20px;
+	height: 34px;
+	line-height: 34px;
+	img {
+		height: 70%;
+	}
+}
+.item-large {
+	font-size: 24px;
+	height: 44px;
+	line-height: 44px;
+	img {
+		height: 70%;
+	}
+}
+.item-self {
+	color: #fff100;
+	background: rgba(64,172,85,.5);
+	border: 1px solid #3cab52;
+	border-radius: 4px;
+}
+
+@keyframes wishMove {
+	from {transform: translateX(375px);}
+	to {transform: translateX(-100%);}
+}
+@-webkit-keyframes wishMove {
+	from {-webkit-transform: translateX(375px);}
+	to {-webkit-transform: translateX(-100%);}
+}

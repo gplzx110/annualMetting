@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<title> 红包 </title>
+<meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, width=device-width" />
+<link rel="stylesheet" type="text/css" href="css/blessing.css" />
+</head>
+<body>
+<div class="m-contents" id="vm-main">
+	<!-- 亲友 未开始直播 -->
+	<div class="not-begin" 
+		v-if="init.show_no_begin && user.is_friend"
+		v-bind:class="{ show: init.show }"
+	><img src="images/blessing/not-begin.jpg" /></div>
+
+	<!-- 员工|嘉宾 未开始直播 -->
+	<div class="not-begin" 
+		v-if="init.show_no_begin && (user.is_staff || user.is_guest)"
+		v-bind:class="{ show: init.show }"
+	><img src="images/blessing/not-begin-1.jpg" /></div>
+
+	<!-- 抽福卡 -->
+	<div class="get-card" 
+		v-if="init.show_get_card"
+		v-bind:class="{ show: init.show }"
+		v-on:click="reGetedBlessingCard()"
+	>
+		<div class="get-box" v-if="! cards.length"><a href="#" title="点击抽取" v-on:click="getUserCards($event)"></a></div>
+		<div class="get-cards" v-if="cards.length">
+			<div class="rg-card"><img v-bind:src="'images/cards/'+ cards[0].img +'.png'" v-bind:alt="cards[0].fkName" /></div>
+		</div>
+	</div>
+
+	<!-- 抽奖列表 -->
+	<div class="b-list" id="fixed-main" v-if="init.show_blessing_list" v-bind:class="{ show: init.show }">
+		<!-- <div id="scroller"> -->
+			<ul>
+				<li 
+					v-for="item in blessing_list" 
+					v-on:click="showBlessingDetail(item)"
+				>
+					<div class="img"><img src="images/blessing/redbag.png" v-bind:class="{ grayscale100: item.status != 3 }" /></div>
+					<div class="name">{{ item.redBagName }}</div>
+					<div class="opts">
+						<div class="num">{{ item.allMoney }}元/{{ item.number }}个</div>
+						<div class="tips" v-if="item.status != 3 && item.money > 0">我抢到 <span class="yellow">{{ item.money }}元</span></div>
+
+						<img src="images/blessing/btn-get.png" class="btn-get" alt="抢" 
+								v-if="item.status == 3 && item.countdownTime == 0" 
+								v-on:click="taskingBlessingbag(item.id, $event)" 
+						/>
+
+						<div class="rtime" v-if="item.status == 3 && item.countdownTime > 0">
+							<span>{{ item.arrCountdownTime[0] }}</span><span>{{ item.arrCountdownTime[1] }}</span>秒
+						</div>
+					</div>
+
+					<div class="tag" v-if="item.status == 2">已抢到</div>
+					<div class="tag grayscale100" v-if="item.status == 1">已抢完</div>
+				</li>
+
+				<li v-if="user.is_staff || user.is_guest" onclick="javascript: window.location.href='./user-index.html'">
+					<div class="img"><img src="images/blessing/fuka.png" /></div>
+					<div class="name">福卡</div>
+					<div class="opts">
+						<div class="num">已获得</div>
+					</div>
+				</li>
+			</ul>
+
+			<div class="g-tip" v-if="blessing_list.length">红包可在“个人中心”提现</div>
+			<div class="g-tip" v-else>红包还未开始发放哦~</div>
+
+			<div class="bottom-menu-station"></div>
+		<!-- </div> -->
+	</div>
+
+	<!-- 访客 -->
+	<div class="visitor-tips hide" v-if="user.is_visitor" v-bind:class="{ show: init.show }">
+		<a href="./support.html"><img src="images/blessing/visitor-img.jpg" /></a>
+	</div>
+	
+	<!-- 导航菜单 -->
+	<div is="tpl_bottom_menu" 
+			v-bind:sed_blessing="true"
+			v-bind:user="user"
+			v-bind:txt_blessing="tpl.txt_blessing"
+	></div>
+
+</div>
+
+<div class="dialog-tip" id="dialog-tip-loading"><div class="tip-loading"></div>正在努力获取数据...</div>
+
+<script data-main="js/app/blessing.js" src="lib/require.js"></script>
+</body>
+</html>

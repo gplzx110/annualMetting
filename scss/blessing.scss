@@ -1,0 +1,322 @@
+@charset "UTF-8";
+
+@import "_helper";
+@import "_base";
+@import "_normalize";
+@import "_bottom-menu";
+// @import "_scroll";
+
+.m-contents {
+}
+
+.not-begin {
+	width: 100%;
+	height: 100%;
+	@include helper_bgimg_y('#{$PAHT_IMG}blessing/not-begin-bg.png');
+	display: none;
+	img {
+		width: 100%;
+	}
+}
+
+.visitor-tips {
+	width: 100%;
+	height: 100%;
+	background-color: #fdecd7;
+	overflow: hidden;
+	img {
+		width: 80%;
+		margin: 100px auto 0 auto;
+		display: block;
+	}
+}
+
+.get-card {
+	width: 100%;
+	height: 100%;
+	min-height: 550px;
+	background-color: #d82d24;
+	position: relative;
+	display: none;
+	&:before {
+		content: "";
+		width: 100%;
+		height: 60%;
+		@include helper_bgimg('#{$PAHT_IMG}blessing/get-top-bg.jpg');
+		position: absolute;
+		top: 0;
+		left: 0;
+		z-index: 1;
+	}
+	&:after {
+		content: "";
+		width: 100%;
+		height: 40%;
+		@include helper_bgimg('#{$PAHT_IMG}blessing/get-bottom-bg.jpg');
+		background-position: 0 61px;
+		position: absolute;
+		bottom: 0;
+		left: 0;
+		z-index: 1;
+	}
+
+	// 抽福卡
+	.get-box {
+		width: 280px;
+		height: 280px;
+		@include helper_bgimg('#{$PAHT_IMG}blessing/get-1.png');
+		position: absolute;
+		top: 170px;
+		left: 50%;
+		margin-left: px(-280/2);
+		z-index: 5;
+		overflow: hidden;
+		a {
+			width: 170px;
+			height: 45px;
+			display: inline-block;
+			margin: 130px 0 0 60px;
+		}
+	}
+
+	// 显示福卡
+	.get-cards {
+		width: 280px;
+		height: 280px;
+		@include helper_bgimg('#{$PAHT_IMG}blessing/get-2.png');
+		position: absolute;
+		top: 170px;
+		left: 50%;
+		margin-left: px(-280/2);
+		z-index: 5;
+		overflow: hidden;
+		.rg-card {
+			width: 102px;
+			height: 102px;
+			margin: 85px 0 0 153px;
+			img {
+				width: 100%;
+				height: 100%;
+			}
+		}
+	}
+}
+
+// 抽奖列表
+.b-list {
+	width: 100%;
+	height: auto;
+	min-height: 100%;
+	background-color: #edeff0;
+	display: none;
+	ul {
+		padding: 10px 15px;
+	}
+	li {
+		width: 100%;
+		height: 80px;
+		padding: 2px 0;
+		background-color: #fff;
+		border: 1px solid #ccc;
+		margin: 10px 0;
+		position: relative;
+		.img {
+			margin-top: 10px;
+			margin-left: 10px;
+			float: left;
+			img {
+				height: 60px;
+			}
+		}
+		.name {
+			font-size: 16px;
+			color: #000;
+			float: left;
+			width: 36%;
+			min-height: 20px;
+			max-height: 40px;
+			line-height: 20px;
+			margin-top: 10px;
+			margin-left: 5px;
+			overflow: hidden;
+			word-wrap: break-word; 
+			word-break:break-all; 
+		}
+		.opts {
+			float: right;
+			margin-top: 10px;
+			margin-right: 5px;
+			text-align: right;
+			.num {
+				font-size: 13px;
+				color: #808080;
+			}
+			.btn-get {
+				height: 30px;
+				margin-top: 10px;
+			}
+			.rtime {
+				color: #4d4d4d;
+				font-size: 15px;
+				margin-top: 10px;
+				span {
+					color: #fff;
+					font-weight: bold;
+					background-color: #ff4b27;
+					text-align: center;
+					width: 20px;
+					height: 26px;
+					line-height: 26px;
+					display: inline-block;
+					padding: 2px 0;
+					margin: 0 3px;
+					border-radius: 3px;
+				}
+			}
+			.tips {
+				color: #4d4d4d;
+				font-size: 14px;
+				margin-top: 15px;
+			}
+			.yellow {
+				color: #ff4b27;
+			}
+		}
+
+		.tag {
+			color: #fff;
+			background-color: #ff5621;
+			padding: 1px 4px;
+			position: absolute;
+			top: 0;
+			left: 0;
+			z-index: 10;
+		}
+	}
+
+	.g-tip {
+		color: #808080;
+		text-align: center;
+		font-size: 14px;
+		margin-top: -5px;
+		margin-bottom: 10px;
+	}
+}
+
+
+// 红包详情
+.blessing-detail {
+	background-color: #edeff0;
+	.d-top {
+		width: 100%;
+		height: auto;
+		display: none;
+		img {
+			width: 100%;
+		}
+	}
+	.d-title {
+		width: 100%;
+		text-align: center;
+		margin-top: 10px;
+		display: none;
+		.name {
+			color: #000;
+			font-size: 16px;
+		}
+		.money {
+			font-size: 26px;
+			line-height: 28px;
+			color: #e32e21;
+			margin-top: 10px;
+			span {
+				font-size: 14px;
+			}
+		}
+		.tip {
+			color: #808080;
+			font-size: 14px;
+		}
+	}
+
+	.total {
+		color: #808080;
+		height: 30px;
+		line-height: 30px;
+		padding: 0 20px;
+		background-color: #e0e0e0;
+		margin-top: 20px;
+		display: none;
+		span { 
+			color: #e32e21;
+		}
+	}
+	.list {
+		width: 100%;
+		font-size: 12px;
+		color: #000;
+		display: none;
+		&.show {
+			display: table !important;
+		}
+		td {
+			height: 34px;
+			line-height: 34px;
+			border-bottom: 1px solid #e1e1e1;
+			span {
+				color: #ff4b27;
+			}
+			&:first-child {
+				text-align: center;
+				width: 40px;
+				img {
+					height: 12px;
+				}
+			}
+			.icon-flag {
+				height: 12px;
+				margin: 0 5px;
+			}
+		}
+	}
+}
+
+.animated {
+  -webkit-animation-duration: 1s;
+  animation-duration: 1s;
+  -webkit-animation-fill-mode: both;
+  animation-fill-mode: both;
+}
+
+@-webkit-keyframes fadeInDown {
+  from {
+    opacity: 0;
+    -webkit-transform: translate3d(0, -100%, 0);
+    transform: translate3d(0, -100%, 0);
+  }
+
+  to {
+    opacity: 1;
+    -webkit-transform: none;
+    transform: none;
+  }
+}
+
+@keyframes fadeInDown {
+  from {
+    opacity: 0;
+    -webkit-transform: translate3d(0, -100%, 0);
+    transform: translate3d(0, -100%, 0);
+  }
+
+  to {
+    opacity: 1;
+    -webkit-transform: none;
+    transform: none;
+  }
+}
+
+.fadeInDown {
+  -webkit-animation-name: fadeInDown;
+  animation-name: fadeInDown;
+}

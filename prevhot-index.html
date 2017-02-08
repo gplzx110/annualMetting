@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8" />
+    <meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, width=device-width" />
+	<title> 吉胜科技年会欢迎您 </title>
+	<link rel="stylesheet" href="lib/swiper/swiper.min.css" />
+	<link rel="stylesheet" href="css/ph-index.css" />
+</head>
+<body>
+<div class="slide-main" id="vm-main" v-bind:class="{ show: init.show }">
+	<div class="swiper-container">
+        <div class="swiper-wrapper">
+            <div class="swiper-slide" v-for="(img, idx) in slides">
+            	<img v-if="idx == 0" v-bind:src="'images/slides/'+ img" />
+            	<img v-else v-bind:data-src="'images/slides/'+ img" class="swiper-lazy" />
+            </div>
+        </div>
+
+        <div class="swiper-pagination"></div>
+    </div>
+
+    <img src="images/prevhot-index/text-w1.png" class="text-w1" alt="吉胜科技年会，聚力前行" />
+
+    <div class="cout-wrap">
+		倒计时<span class="num">{{ last_day }}</span>天
+	</div>
+
+	<div class="user-id">用户ID：{{ user.id }}</div>
+
+	<div class="nav-bottom">
+		<ul class="nav-list">
+			<li class="nav-item bounceInUp animated">
+				<a href="./historyPerform.html"><img src="images/prevhot-index/nav-video-gold-1.png" alt="历年精彩" /></a>
+			</li>
+			<li class="nav-item bounceInUp animated">
+				<a href="./support.html"><img src="images/prevhot-index/nav-love-gold-1.png" alt="亲友助力" /></a>
+			</li>
+			<li class="nav-item bounceInUp animated">
+				<a href="./wishes.html"><img src="images/prevhot-index/nav-tree-gold-1.png" alt="新年许愿树" /></a>
+			</li>
+			<li class="nav-item bounceInUp animated" v-if="user.is_staff">
+				<a href="./rewards.html"><img src="images/prevhot-index/nav-bag-gold-1.png" alt="抽大奖" /></a>
+			</li>
+		</ul>
+	</div>
+	<div class="bottom"></div>
+</div>
+
+<script data-main="js/app/prevhot-index.js" src="lib/require.js"></script>
+</body>
+</html>

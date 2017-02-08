@@ -1,0 +1,205 @@
+@charset "UTF-8";
+
+@import "_helper";
+@import "_base";
+@import "_base-preheat";
+@import "_normalize";
+@import "_bottom-menu";
+
+.g-org {
+    color: #df2926;
+}
+.rewards-page {
+    min-height: 100%;
+    background: #f0f1f2;
+}
+.fixed-main {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 70px;
+    z-index: 1;
+    overflow-x: hidden;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    overflow-scrolling: touch;
+}
+.reward-item {
+    display: none;
+}
+.reward-header {
+	padding: 20px 10px 10px 20px;
+    .reward-num {
+        float: right;
+    }
+}
+.reward-wrap {
+    display: block;
+    margin: 0 10px;
+	background: #fff;
+	border: 1px solid #ccc;
+	text-align: center;	
+    .count-txt {
+        padding-top: 8px;
+
+        display: inline-block;
+
+        vertical-align: top;
+    }
+    .pic {
+        margin: 20px 0 10px;
+        position: relative;                     
+		img {
+			max-width: 65%;
+			max-height: 160px;
+		}
+        .luck-name {
+            position: absolute;
+            max-width: 50%;
+            top: 50%;
+            left: 50%;
+            transform: translateX(-50%) translateY(-50%);
+            -webkit-transform: translateX(-50%) translateY(-50%);
+            padding: 7px 12px;
+            background: #e84946;
+            font-size: 13px;
+            color: #fff;
+            border-radius: 4px;
+            span {
+                padding: 0 2px;
+            }
+        }
+	}
+    .count-time {
+        display: inline-block;
+        margin: 10px 0 15px;
+        overflow: hidden;
+        span {
+            display: inline-block;
+            margin: 0 2px;
+            padding: 2px 3px;
+            background: #ff4b27;
+            color: #fff;
+            font-size: 26px;
+            border-radius: 4px;
+            line-height: 1;
+            vertical-align: middle;
+        }
+        &.disabled {
+            span {
+                background: #cecece;
+                color: #fff;
+            }
+        }
+        .txt {
+            padding-left: 3px;
+            font-style: normal;
+        }
+    }
+}  
+.qst-wrap {
+    float: right;
+    font-weight: normal;
+    overflow: hidden;
+    border: none;
+    vertical-align: middle;
+    font-size: 13px;
+    .icon {
+        padding-right: 2px;
+    }
+}
+.participant {
+    margin: 20px;
+    font-size: 14px;
+    .pt-table-wrap {
+        margin-top: 5px;
+        font-size: 12px;
+    }
+    .pt-table {
+        width: 100%;
+    }
+}  
+.buy-wrap {
+    position: fixed;
+    bottom: 0;
+    z-index: 2;
+    padding: 10px 0;
+    width: 100%;
+    background: #fff;
+    text-align: center;
+    border: 1px solid #d9d9d9;
+    box-sizing: border-box;
+    .cont-left {
+        display: inline-block;
+
+        padding-right: 5px;
+
+        margin: 5px 0;
+        vertical-align: middle;
+        .remain-money {
+            font-size: 14px;
+        }
+    }
+    .cont-right {
+        display: inline-block;
+    }
+    .inp-wrap {
+        display: inline-block;
+        overflow: hidden;
+        border: 1px solid #d9d9d9;
+        vertical-align: middle;
+    }
+    .buy-num-inp {
+        float: left;
+        width: 34px;
+        height: 32px;
+        box-sizing: border-box;
+        line-height: 24px;
+        text-align: center;
+        border: none;
+    }
+    .min-btn {
+        @extend .buy-num-inp;
+        padding: 0;
+        line-height: 32px;
+        font-size: 20px;
+
+        font-weight: bold;
+
+        color: #ff4b27;
+        
+        border-right: 1px solid #d9d9d9;
+    }
+    .plus-btn {
+        @extend .min-btn;
+        border-right: none;
+
+        border-left: 1px solid #d9d9d9;
+    }
+    .btn-buy {
+        font-size: 12px;
+        padding: 9px 10px;
+        vertical-align: middle;
+    }
+    .btn-buy.disabled {
+        background: rgb(163, 158, 158);
+    }
+    .btn-charge {
+        @extend .btn-buy;
+    }
+}
+.charge-inp {
+    width: 213px;
+    height: 32px;
+    box-sizing: border-box;
+    line-height: 24px;
+    text-align: center;
+    border: 1px solid #d9d9d9;
+    border-radius: 2px;
+    margin-right: 5px;
+    box-shadow: none;
+    outline: none;
+    -webkit-appearance: none;
+    -moz-appearance: none; /* mobile firefox too! */
+}

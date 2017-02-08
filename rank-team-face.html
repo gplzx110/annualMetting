@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<title> 团队颜值比拼排行 </title>
+<meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, width=device-width" />
+<link rel="stylesheet" type="text/css" href="css/rank-team.css" />
+</head>
+<body>
+
+<div class="m-contents rank-team-contents" id="vm-main" v-bind:class="{ show: init.show }">
+	<div class="r-list" v-for="(item, it_idx) in team_list">
+		<ul>
+			<li>
+				<div class="rank-no" v-if="! is_follow_team"><!-- 显示排名 -->
+					<div class="fl"><img v-bind:src="'images/rank-team/no'+ (it_idx + 1) +'.png'" class="no" /></div>
+					<div class="fl ml10">
+						<div class="img-t red" v-if="item.name == '红队'"><img src="images/team/red-m.png" />红队</div>
+						<div class="img-t yellow" v-else-if="item.name == '黄队'"><img src="images/team/yellow-m.png" />黄队</div>
+						<div class="img-t blue" v-else-if="item.name == '蓝队'"><img src="images/team/blue-m.png" />蓝队</div>
+
+						<div class="psorce">
+							<span><img src="images/home/ico-good-org-s.png" /> {{ item.followNum }}</span>
+							<!-- <span>得分：{{ item.faceScore }}</span> -->
+						</div>
+					</div>
+				</div>
+
+				<div class="support" v-if="is_follow_team"><!-- 未支持 -->
+					<div class="fl red" v-if="item.name == '红队'"><img src="images/team/red-m.png" />红队</div>
+					<div class="fl yellow" v-else-if="item.name == '黄队'"><img src="images/team/yellow-m.png" />黄队</div>
+					<div class="fl blue" v-else-if="item.name == '蓝队'"><img src="images/team/blue-m.png" />蓝队</div>
+
+					<div class="fr" v-if="!user.is_visitor">
+						<img src="images/rank-team/btn-support.png" class="btn-support" alt="支持" v-on:click="supportTeam(item.id)" />
+					</div>
+				</div>
+
+
+				<div class="pimgs" v-if="item.pic.length">
+					<div v-for="img in item.pic"><img v-bind:src="img" v-on:click="previewImg(img)" /></div>
+				</div>
+				<div class="clear"></div>
+
+				<div class="bot-opts clear" v-if="user.is_staff || user.is_guest || user.is_friend">
+					<div class="fr blue" v-on:click="addComment(item.id, $event)"><img src="images/home/ico-commet-blue.png" class="ico-commet" />评论</div>
+				</div>
+
+				<div class="good-list clear">
+					<img src="images/home/ico-good-blue.png" /><span> {{ item.followName }}</span><!-- 点赞 -->
+				</div>
+
+				<div class="comment-list" v-if="item.commentList.length">
+					<ul>
+						<li v-for="comment in item.commentList" v-if="! item.hide_comment || comment.show">
+							<div class="mt">
+								<span class="name">{{ comment.userName }}：</span>
+								<span class="content">{{ comment.content }}</span>
+							</div>
+							<img src="images/home/ico-delete.png" class="ico-delete fr" alt="删除" v-if="user.is_manager" v-on:click="deleteComment(comment.id)" />
+						</li>
+					</ul>
+					<div class="open-close" v-if="item.hide_comment_count > 0 && item.hide_comment" v-on:click="toggleComment(item.id)">展开全部评论》</div>
+					<div class="open-close" v-else-if="item.hide_comment_count > 0" v-on:click="toggleComment(item.id)">收起评论》</div>
+				</div>
+
+				<div class="clear"></div>
+			</li>
+		</ul>
+	</div>
+
+	<div class="add_comment" v-if="add_comment.show">
+		<input type="text" name="comment" id="comment_content" placeholder="请输入评论" v-model.trim="add_comment.content" v-focus />
+		<span class="btn" v-on:click="addComment()">发送</span>
+	</div>
+
+	<!-- 图片预览 -->
+	<div class="modal-layout preview-img" 
+		v-bind:class="{ show: preview_img.show }" 
+		v-on:click="preview_img.show = !preview_img.show"
+	>
+		<img 
+			v-if="preview_img.img && preview_img.img != ''" 
+			v-on:click.stop="preview_img.show = false" 
+			v-bind:src="preview_img.img" />
+	</div>
+
+</div>
+
+
+<div class="dialog-tip" id="dialog-tip-loading"><div class="tip-loading"></div>正在努力获取数据...</div>
+
+<script data-main="js/app/rank-team-face.js" src="lib/require.js"></script>
+</body>
+</html>

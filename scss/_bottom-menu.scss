@@ -1,0 +1,64 @@
+.bottom-menu-station {
+	height: 50px;
+}
+
+.bottom-menu {
+	width: 100%;
+	height: 49px;
+	position: fixed;
+	bottom: 0;
+	left: 0;
+	z-index: 50;
+	background-color: rgba(255,255,255,.92);
+	border-top: 1px solid #d0d2d3;
+	overflow: hidden;
+	ul {
+		width: 100%;
+		height: 100%;
+		li {
+			color: #4d4d4d;
+			font-size: 12px;
+			width: 25%;
+			line-height: 16px;
+			text-align: center;
+			float: left;
+			i {
+				width: px(37/2);
+				height: px(64/4);
+				display: block;
+				margin: 8px auto 2px auto;
+			}
+			&.sed {
+				color: #ff5421;
+				i {
+					background-position: 0px px(-64/4);
+				}
+			}
+		}
+		.ico-blessing {
+			i {
+				@include helper_bgimg('#{$PAHT_IMG}icos/blessing.png');
+			}
+		}
+		.ico-gift {
+			i {
+				@include helper_bgimg('#{$PAHT_IMG}icos/gift.png');
+			}
+		}
+		.ico-love {
+			i {
+				@include helper_bgimg('#{$PAHT_IMG}icos/love.png');
+			}
+		}
+		.ico-self {
+			i {
+				@include helper_bgimg('#{$PAHT_IMG}icos/self.png');
+			}
+		}
+		.ico-video {
+			i {
+				@include helper_bgimg('#{$PAHT_IMG}icos/video.png');
+			}
+		}
+	}
+}

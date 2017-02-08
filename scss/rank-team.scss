@@ -1,0 +1,310 @@
+@charset "UTF-8";
+
+@import "_helper";
+@import "_base";
+@import "_normalize";
+@import "_comment";
+
+body {
+	@include helper_bgimg_y('#{$PAHT_IMG}rank-team/bg.jpg');
+	background-size: 100% 100%;
+	background-attachment: fixed
+}
+
+.rank-team-contents {
+	height: auto;
+	padding: 0;
+	display: none;
+	position: relative;
+	// 颜值
+	.r-list {
+		padding: 0 8px;
+		margin: 10px 0;
+		>ul >li {
+			padding: 15px 0 5px 0;
+			width: 100%;
+			position: relative;
+			margin: 10px 0;
+			clear: both;
+			.red {
+				color: #f52720;
+			}
+			.yellow {
+				color: #ff7826;
+			}
+			.blue {
+				color: #27a7f1;
+			}
+		}
+		.pimgs {
+			margin: 0 8px;
+			padding-top: 5px;
+			clear: both;
+			>div {
+				width: 33.33%;
+				height: 70px;
+				text-align: center;
+				float: left;
+				margin: 2px 0;
+				overflow: hidden;
+				img {
+					min-height: 70px;
+					max-width: 95%;
+				}
+			}
+		}
+		.rank-no {
+			margin: 0 10px;
+			font-size: 14px;
+			.no {
+				height: 40px;
+			}
+			.img-t {
+				font-size: 16px;
+				img {
+					height: 18px;
+					vertical-align: -1px;
+					margin-right: 5px;
+				}
+			}
+			.psorce {
+				color: #ff5519;
+				font-size: 12px;
+				margin-top: 4px;
+				span {
+					margin-right: 10px;
+				}
+				img {
+					height: 12px;
+				}
+			}
+		}
+		.support {
+			font-size: 14px;
+			margin: 0 10px;
+			.fl {
+				img {
+					height: 16px;
+					vertical-align: -1px;
+					margin-right: 5px;
+				}
+			}
+			.btn-support {
+				height: 24px;
+				vertical-align: -3px;
+			}
+		}
+		.bot-opts {
+			margin: 0 8px;
+			padding: 8px 0;			
+			height: 8px;
+			.blue {
+				color: #677699;
+			}
+			.ico-commet {
+				width: 19px;
+				vertical-align: -3px;
+				margin-right: 3px;
+				margin-left: 10px;
+				margin-top: 3px;
+			}
+		}
+		.good-list {
+			color: #576b95;
+			margin: 0 8px;
+			height: 22px;
+			line-height: 22px;
+			background-color: #f0f1f2;
+			margin-top: 10px;
+			padding: 0 10px;
+			overflow: hidden;
+			white-space: nowrap;
+			text-overflow: ellipsis;
+			img {
+				height: 12px;
+				vertical-align: -1px;
+			}
+		}
+		.comment-list {
+			color: #000;
+			margin: 0 8px;
+			li {
+				font-size: 12px;
+				width: 100%;
+				height: auto;
+				min-height: 22px;
+				line-height: 22px;
+				background-color: #f0f1f2;
+				padding: 0;
+				margin: 1px 0;
+				> div {
+					display: inline-block;
+				}
+				.mt {
+					width: 88%;
+					height: auto;
+					margin-left: 10px;
+					.name {
+						color: #576b95;
+						vertical-align: top;
+					}
+				}
+				.ico-delete {
+					width: 16px;
+					margin-right: 5px;
+					margin-top: 3px;
+				}
+			}
+			.open-close {
+				width: 100%;
+				line-height: 24px;
+				text-align: center;
+				color: #576b95;
+				margin-top: 5px;
+			}
+		}
+
+	}
+
+	// 结果排名
+	.t-list {
+		padding: 0;
+		padding-top: 20px;
+		>.item {
+			width: 100%;
+			height: auto;
+			min-height: 160px;
+			background-color: #fff;
+			position: relative;
+			margin: 10px 0;
+			.red {
+				color: #f52720;
+			}
+			.yellow {
+				color: #ff7826;
+			}
+			.blue {
+				color: #27a7f1;
+			}
+			.org {
+				color: #ff5519;
+			}
+		}
+		.no {
+			width: 30%;
+			min-width: 90px;
+			// text-align: center;
+			img {
+				height: 80px;
+				margin-left: 10px;
+			}
+		}
+		.detail {
+			width: 70%;
+			.ranks {
+				// margin-left: 10px;
+				font-size: 20px;
+				margin-top: 20px;
+				img {
+					height: 22px;
+					vertical-align: -2px;
+					margin-right: 5px;
+				}
+			}
+			.sorces {
+				margin-top: 10px;
+				color: #808080;
+				line-height: 18px;
+			}
+		}
+		ul {
+			width: 100%;
+			padding: 5px 0;
+			li {
+				color: #4d4d4d;
+				width: 99%;
+				height: 30px;
+				line-height: 30px;
+				border-radius: 15px;
+				margin: 6px 0;
+				background-color: #ebebeb;
+				position: relative;
+				span {
+					font-size: 11px;
+					width: auto;
+					height: px(30-8);
+					line-height: px(30-8);
+					padding: 0 5px;
+					display: inline-block;
+					background-color: #d2d2d2;
+					border-radius: px((30-8)/2);
+					position: absolute;
+					right: 4px;
+					top: 4px;
+					z-index: 5;
+				}
+				div {
+					width: auto;
+					height: 100%;
+					overflow: hidden;
+					white-space: nowrap;
+					text-overflow: ellipsis;
+					position: absolute;
+					left: 10px;
+					right: 50px;
+					z-index: 5;
+				}
+			}
+			&.red {
+				li.over {
+					background-color: #ffdfde;
+					span {
+						background-color: #ffbec0;
+					}
+				}
+			}
+			&.yellow {
+				li.over {
+					background-color: #fbeddc;
+					span {
+						background-color: #ffdfb6;
+					}
+				}
+			}
+			&.blue {
+				li.over {
+					background-color: #d8f1ff;
+					span {
+						background-color: #b2e1fb;
+					}
+				}
+			}
+		}
+		.person-sroce {
+			text-align: right;
+			position: absolute;
+			top: 10px;
+			right: 15px;
+			z-index: 5;
+		}
+	}
+
+}
+
+
+.i-explain {
+	position: absolute;
+	right: 10px;
+	top: 8px;
+	z-index: 2;
+	.icon-qst {
+		width:  12px;
+		height:  12px;
+		vertical-align: middle;
+		background: url(#{$PAHT_IMG}icos/icon-faq.png) no-repeat;
+		background-size: 12px auto;
+		margin-top: -2px;
+		margin-right: 2px;
+		display: inline-block;
+	}
+}

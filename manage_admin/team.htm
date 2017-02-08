@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>吉胜科技 - 2017年会直播管理后台</title>
+  <link rel="stylesheet" href="lib/bootstrap/css/bootstrap.min.css" />
+  <!-- <link rel="stylesheet" href="lib/bootstrap/css/bootstrap-responsive.min.css" /> -->
+  <link rel="stylesheet" href="lib/bootstrap/css/docs.css" />
+  <link rel="stylesheet" href="css/main.css" />
+</head>
+<body>
+  <div class="navbar navbar-inverse navbar-fixed-top">
+      <div class="navbar-inner">
+        <div class="container">吉胜科技 - 2017年会直播管理后台</div>
+      </div>
+    </div>
+
+  <div class="container hide" v-bind:class="{ show: init.show }" id="vm-main">
+    <div class="row-fluid">
+        <div class="span3 bs-docs-sidebar">
+          <ul class="nav nav-list bs-docs-sidenav affix-top">
+            <li><a href="./setting.htm"><i class="icon-chevron-right"></i> 基础设置</a></li>
+            <li><a href="./reward.htm"><i class="icon-chevron-right"></i> 奖品</a></li>
+            <li><a href="./program.htm"><i class="icon-chevron-right"></i> 节目</a></li>
+            <li><a href="./redbag.htm"><i class="icon-chevron-right"></i> 红包</a></li>
+            <li><a href="./team.htm"><i class="icon-chevron-right"></i> 团队</a></li>
+            <li><a href="./vow.htm"><i class="icon-chevron-right"></i> 许愿树</a></li>
+          </ul>
+        </div>
+
+        <div class="span9 contents">
+
+            <div class="updateimg" style="margin-top: 40px;" v-if="update_imgs.show">
+
+              <div style="margin: 10px; display: inline-block;" v-for="img in update_imgs.list">
+                <a target="_blank" v-bind:href="img">
+                  <img v-bind:src="img" class="img-rounded" style="height: 120px;" />
+                </a>
+                <span class="btn btn-danger btn-mini" v-on:click="removeUpdateImg(img)">移除</span>
+              </div>
+
+              <div class="add text-info" style="margin-top: 20px;" v-if="update_imgs.list.length < 6">
+                <div class="message text-error">{{ init.message }}</div>
+                <input type="file" id="fileToUpload" name="file" />
+
+                <span class="btn btn-mini btn-success" v-on:click="uploadImg()">添加图片</span>
+              </div>
+
+              <div class="btns" style="margin-top: 20px;">
+                  <span class="btn btn-primary" v-on:click="saveImgs()">保存</span>
+                  <span class="btn" v-on:click="update_imgs.show = false">取消</span>
+              </div>
+            </div>
+
+
+            <table class="table table-hover" v-show="! init.add_show && ! update_imgs.show">
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>团队</th>
+                  <th>操作</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr v-for="item in list">
+                  <td>{{ item.id }}</td>
+                  <td>{{ item.name }}</td>
+                  <td>
+                    <span class="btn btn-mini btn-primary" v-on:click="updateImgs(item.id)">更新图片</span>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+        </div>
+    </div>
+  </div>
+
+</body>
+</html>
+
+<script type="text/javascript" src="lib/jquery/jquery.min.js"></script>
+<script type="text/javascript" src="lib/vue.js"></script>
+<script type="text/javascript" src="js/comm.js"></script>
+<script src="http://increment.16288.cn/template/lib/plugin/ajaxfileupload.js" type="text/javascript"></script>
+<script type="text/javascript">
+(function() {
+
+  var vm = new Vue({
+      el: '#vm-main',
+      data: {
+        init: {
+            show: true,
+            message: ''
+        },
+        list: [],
+        update_imgs: {
+            show: false,
+            team_id: null,
+            list: []
+        }
+      },
+      methods: {
+        uploadImg: function() {
+            if($('#fileToUpload').val() === '') {
+                this.init.message = '请选择上传图片';
+                return;
+            }
+
+            var _this = this;
+            this.init.message = '上传中...';
+
+           $.ajaxFileUpload({
+                url: comm.PATH + '/upload/uploadImg.do',
+                secureuri: false,
+                fileElementId: 'fileToUpload',
+                dataType: 'json',
+                complete:function(res, status) {},
+                success: function (response, status) {
+                    if(typeof response === 'string') {
+                        response = JSON.parse(response);
+                    }
+                    
+                    _this.update_imgs.list.push(response.data);
+                    _this.init.message = '上传成功';
+
+                    $('#fileToUpload').val('');
+                }
+            });
+        },
+        updateImgs: function(id) {
+            this.init.message = '';
+            this.update_imgs = {
+                show: true,
+                team_id: id,
+                list: []
+            };
+
+            app.getTeamPic(id);
+        },
+        removeUpdateImg: function(pic) {
+            var arr = [];
+            for(var i = 0, len = this.update_imgs.list.length; i < len; i++) {
+              if(this.update_imgs.list[i] !== pic) {
+                  arr.push(this.update_imgs.list[i]);
+              }
+            }
+
+            this.update_imgs.list = arr;
+        },
+        saveImgs: function() {
+            var _this = this;
+
+            if(! this.update_imgs.list.length) {
+               alert('请选择上传图片');
+               return;
+            }
+
+            comm.ajax('/back/updateTeamPic.html', {
+                params: {
+                  id: this.update_imgs.team_id,
+                  pic: this.update_imgs.list.join(',')
+                }, type: 'POST'}, function(response) {
+                  if(! response) {
+                    return;
+                  }
+
+                  _this.update_imgs = {
+                      show: false,
+                      team_id: null,
+                      list: []
+                  };
+
+                  app.initList();
+              });
+        },
+        addItem: function() {
+            var _this = this;
+
+            comm.ajax('/back/addProgram.html', {params: this.add_item, type: 'POST'}, function(response) {
+               if(! response) {
+                  return;
+               }
+
+               _this.init.add_show = false;
+               _this.init.message = '';
+               _this.add_item = {
+                  name: '',
+                  teamId: 1,
+                  actors: ''
+                };
+
+                app.initList();
+            });
+        }
+      }
+  });
+
+  var app = {
+      initList: function() {
+        vm.list = [
+          {id: 1, name: '红队'},
+          {id: 2, name: '黄队'},
+          {id: 3, name: '蓝队'}
+        ];
+      },
+      getTeamPic: function(id) {
+          comm.ajax('/back/findTeamPic.html', {params: {id: id}}, function(response) {
+             if(! response) {
+                return;
+             }
+
+             vm.update_imgs.list = (response.data && response.data !== '') ? response.data.split(',') : [];
+          });
+      },
+      init: function() {
+        this.initList();
+      }
+  };
+
+  app.init();
+
+}());
+</script>

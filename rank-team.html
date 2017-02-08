@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<title> 团队排名 </title>
+<meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, width=device-width" />
+<link rel="stylesheet" type="text/css" href="css/rank-team.css" />
+</head>
+<body>
+
+<div class="m-contents rank-team-contents" id="vm-main" v-bind:class="{ show: init.show }">
+	<div class="i-explain" v-on:click="showExplain()"><i class="icon icon-qst"></i>说明</div>
+
+	<div class="t-list">
+
+		<div class="item" v-for="(item, index) in team_list">
+			<div class="fl no"><img v-bind:src="'images/rank-team/tno'+ (index + 1) +'.png'" /></div>
+			<div class="fl detail">
+				<div>
+					<div class="fl">
+						<div class="ranks red" v-if="item.name == '红队'"><img src="images/team/red.png" />红队</div>
+						<div class="ranks yellow" v-else-if="item.name == '黄队'"><img src="images/team/yellow.png" />黄队</div>
+						<div class="ranks blue" v-else-if="item.name == '蓝队'"><img src="images/team/blue.png" />蓝队</div>
+					</div>
+				</div>
+				
+				<!-- 节目列表 -->
+				<ul class="clear" v-bind:class="[item.icon]">
+					<li 
+						v-for="pro in item.programList" 
+						v-bind:class="{ over: pro.status == 3 }"
+					>
+						<div>{{ pro.name }}</div>
+						<span v-if="pro.status == 3">{{ pro.score }}</span>
+					</li>
+				</ul>
+
+			</div>
+
+			<div class="person-sroce">
+				<div class="org">
+					<p>当前总分：{{ item.score }}分</p>
+				</div>
+			</div>
+
+			<div class="clear"></div>
+		</div>
+
+	</div>
+
+	<!-- 提示框 --><div is="dialogtip" v-bind:tip="tip"></div>
+
+</div>
+
+<div class="dialog-tip" id="dialog-tip-loading"><div class="tip-loading"></div>正在努力获取数据...</div>
+
+<script data-main="js/app/rank-team.js" src="lib/require.js"></script>
+</body>
+</html>

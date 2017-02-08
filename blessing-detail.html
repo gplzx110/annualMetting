@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<title> 红包详情 </title>
+<meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, width=device-width" />
+<link rel="stylesheet" type="text/css" href="css/blessing.css" />
+</head>
+<body class="blessing-detail">
+
+<div class="m-contents" id="vm-main">
+	<transition 
+		name="custom-classes-transition"
+	    enter-active-class="animated fadeInDown"
+    >
+		<div class="d-top" v-if="init.show" v-bind:class="{ show: init.show }"><img src="images/blessing/detail-top.png" /></div>
+	</transition>
+
+	<div class="d-title" v-if="init.show" v-bind:class="{ show: init.show }">
+		<div class="name">{{ detail.redBagName }}</div>
+		<div class="money">{{ detail.money }}<span>元</span></div>
+		<div class="tip">您抢到的金额已存入账户</div>
+	</div>
+
+	<div class="total" v-bind:class="{ show: init.show }">已领取{{ detail.haveNumber }}/{{ detail.number }}, 共<span>{{ detail.allMoney }}</span>元</div>
+
+	<table class="list" v-bind:class="{ show: init.show }">
+		<tbody>
+			<tr v-for="item in detail.haveList">
+				<td v-if="item.moneyFlag == 1"><img src="images/blessing/ico-gold.png" /></td>
+				<td v-else-if="item.moneyFlag == 2"><img src="images/blessing/ico-bad.png" /></td>
+				<td v-else>&nbsp;</td>
+				
+				<td>{{ item.nickName }}</td>
+
+				<td v-if="item.teamName == '红队'"><img src="images/icos/icon-flag-red.png" class="icon-flag" /></td>
+				<td v-else-if="item.teamName == '蓝队'"><img src="images/icos/icon-flag-blue.png" class="icon-flag" /></td>
+				<td v-else-if="item.teamName == '黄队'"><img src="images/icos/icon-flag-yellow.png" class="icon-flag" /></td>
+				<td v-else>&nbsp;</td>
+
+				<td>{{ item.obtainTimeStr }}</td>
+				<td><span>{{ item.money }}元</span></td>
+			</tr>
+		</tbody>
+	</table>
+
+</div>
+
+<script data-main="js/app/blessing-detail.js" src="lib/require.js"></script>
+</body>
+</html>

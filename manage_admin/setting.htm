@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>吉胜科技 - 2017年会直播管理后台</title>
+  <link rel="stylesheet" href="lib/bootstrap/css/bootstrap.min.css" />
+  <link rel="stylesheet" href="lib/bootstrap/css/docs.css" />
+  <link rel="stylesheet" href="css/main.css" />
+</head>
+<body>
+  <div class="navbar navbar-inverse navbar-fixed-top">
+      <div class="navbar-inner">
+        <div class="container">吉胜科技 - 2017年会直播管理后台</div>
+      </div>
+    </div>
+
+  <div class="container hide" v-bind:class="{ show: init.show }" id="vm-main">
+    <div class="row-fluid">
+        <div class="span3 bs-docs-sidebar">
+          <ul class="nav nav-list bs-docs-sidenav affix-top">
+            <li><a href="./setting.htm"><i class="icon-chevron-right"></i> 基础设置</a></li>
+            <li><a href="./reward.htm"><i class="icon-chevron-right"></i> 奖品</a></li>
+            <li><a href="./program.htm"><i class="icon-chevron-right"></i> 节目</a></li>
+            <li><a href="./redbag.htm"><i class="icon-chevron-right"></i> 红包</a></li>
+            <li><a href="./team.htm"><i class="icon-chevron-right"></i> 团队</a></li>
+            <li><a href="./vow.htm"><i class="icon-chevron-right"></i> 许愿树</a></li>
+          </ul>
+        </div>
+
+        <div class="span9 contents">
+            <dl v-for="item in list">
+              <dt><h4>{{ item.name }}</h2></dt>
+              <dd>
+                <span class="btn btn-success" v-if="item.value == 1" v-on:click="toggleSwitch(item.code, item.value)">已开启(点击关闭)</span>
+                <span class="btn btn-danger" v-else-if="item.value == 2" v-on:click="toggleSwitch(item.code, item.value)">已关闭(点击开启)</span>
+              </dd>
+            </dl>
+        </div>
+    </div>
+  </div>
+
+</body>
+</html>
+
+<script type="text/javascript" src="lib/jquery/jquery.min.js"></script>
+<script type="text/javascript" src="lib/vue.js"></script>
+<script type="text/javascript" src="js/comm.js"></script>
+<script type="text/javascript">
+(function() {
+
+  var vm = new Vue({
+      el: '#vm-main',
+      data: {
+        init: {
+            show: true,
+        },
+        list: []
+      },
+      methods: {
+        toggleSwitch: function(code, val) {
+            val = Number(val) === 1 ? 2 : 1; // 1.开2.关
+            var txt = val === 2 ? '确定要关闭么？' : '确定要开启么？'
+
+            if(window.confirm(txt)) {
+                comm.ajax('/back/updateSysConfig.html', {params: {code: code, value: val}, type: 'POST'}, function(response) {
+                    if(! response) {
+                      return;
+                    }
+
+                    app.initConfig();
+                });
+            }
+        }
+      }
+  });
+
+  var app = {
+      initConfig: function() {
+        comm.ajax('/back/findSysConfigList.html', {}, function(response) {
+            vm.list = response.data.list;
+        });
+      },
+      init: function() {
+        this.initConfig();
+      }
+  };
+
+  app.init();
+
+}());
+</script>

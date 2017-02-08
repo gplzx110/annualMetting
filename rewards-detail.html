@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+    <meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, width=device-width">
+	<title>一等奖</title>
+	<link rel="stylesheet" href="css/rewards.css?t=7">
+</head>
+<body>
+	<div class="rewards-page" id="vm-main">
+		<div v-bind:class="{show: init.show}" style="display: none;">
+			<div class="fixed-main">
+				<div class="goods-wrapper">
+					<div class="reward-header">
+						<div class="sec-header">
+							{{ getLevle(reward.level) }}
+							<span class="qst-wrap" v-on:click="showExplain"><i class="icon icon-qst"></i>说明</span>
+						</div>
+					</div>
+					<div class="reward-wrap">
+						<div class="pic">
+							<img v-bind:src="reward.pic">
+							<div v-show="reward.userList && reward.userList.length" class="luck-name">获奖：
+								<span v-for="(item,idx) in reward.userList">
+									{{ item.userName }}
+								</span>
+							</div>
+						</div>
+						<div class="status">当前已下注：<span class="g-org">{{ reward.betNum }}</span></div>
+						<div class="count-time" v-bind:class="{disabled: reward.status !==1}" v-html="getCount(reward.countdownStart, reward.countdownEnd)"></div>
+					</div>
+				</div>
+				<div class="participant">
+					参与记录
+					<div class="pt-table-wrap">
+						<table class="pt-table">
+							<tbody>
+								<tr v-for="(item, idx) in reward.playList">
+									<td class="name">{{ item.userName }}</td>
+									<td class="team">{{ item.followTeam }}</td>
+									<td class="buy-num">投注 <span class="g-org">{{ item.myselfBetNum }}</span> 注</td>
+									<td class="time">{{ item.betTime }}</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+			<div class="buy-wrap">
+				<div class="cont-left">
+					<span>钱包剩余：<span class="remain-money g-org">{{ reward.userMoney/100 }}元</span></span>
+				</div>
+				<div class="cont-right">
+					<div class="inp-wrap">
+						<span v-on:click="minus" class="min-btn">-</span>
+						<input class="buy-num-inp" type="tel" v-model="buyNum" v-on:keyup="keyupEvent" v-on:blur="blurEvent">
+						<span v-on:click="plus" class="plus-btn">+</span>
+					</div>
+					<div class="btn btn-warn btn-buy" v-bind:class="{ disabled: noMoney }" v-on:click="buy">立即下注</div>
+					<div class="btn btn-info btn-charge" v-on:click="charge.dialogShow = !charge.dialogShow">钱包充值</div>
+				</div>
+			</div>
+			<!-- 支付确认弹框 -->
+			<!-- <div class="w-msgbox" style="display: none;" id="js-msgbox" v-bind:class="{ show: tip.pay.show }">
+			    <div class="w-msgbox-close close" v-on:click="tip.pay.show = !tip.pay.show">×</div>
+			    <div class="w-msgbox-bd">
+			        <h3 class="w-msgbox-title">请确认支付是否完成</h3>
+			    </div>
+			    <div class="w-msgbox-ft w-msgbox-ft-2">
+			        <button class="pro-btn js-btn-finsh" type="button" v-on:click="payOver"><span>完成支付</span></button>
+			        <button class="pro-btn js-btn-try" type="button" v-on:click="doCharge"><span>重试</span></button>
+			    </div>
+			</div>
+			<div class="modal-layout modal-layout-pay" v-bind:class="{ show: tip.pay.show }" v-on:click="tip.pay.show = !tip.pay.show"></div> -->
+			<!-- 支付确认弹框 -->
+
+			<!-- 提示框 -->
+			<div class="modal-layout" v-bind:class="{ show: tip.show }" v-on:click="tip.show = !tip.show"></div>
+			<div class="msg-tip" v-bind:class="{ show: tip.show }">
+				<div class="msg"  v-html="tip.msg">
+					{{ tip.msg }}
+				</div>
+				<div class="btn-submit mt20" v-on:click="tip.show = !tip.show">确定</div>
+			</div>
+			<!-- 提示框 -->
+
+			<!-- 充值框 -->
+			<div class="modal-layout" v-bind:class="{ show: charge.dialogShow }" v-on:click="charge.dialogShow = !charge.dialogShow"></div>
+			<div class="msg-tip charge-dialog" v-bind:class="{ show: charge.dialogShow }">
+				<div class="msg">
+					<input v-model="charge.money" v-on:keyup="chargeKeyupEvent" type="tel" class="charge-inp" placeholder="请输入充值金额">元
+				</div>
+				<div class="btn-submit charge-submit-btn mt20" v-on:click="doCharge">充值</div>
+			</div>
+			<!-- 充值框 -->
+
+			<!-- 充值框 -->
+			<div class="modal-layout" v-bind:class="{ show: charge.success }" v-on:click="reload"></div>
+			<div class="msg-tip" v-bind:class="{ show: charge.success }">
+				<div class="msg">
+					充值成功，快去下注把~
+				</div>
+				<div class="btn-submit mt20" v-on:click="reload">确定</div>
+			</div>
+			<!-- 充值框 -->
+		</div>
+	</div>
+	<!-- loading -->
+	<div class="dialog-tip" id="dialog-tip-loading"><div class="tip-loading"></div>正在努力获取数据...</div>
+	<!-- loading -->
+	<script data-main="js/app/reward-detail.js?t=932434239" src="lib/require.js"></script>
+</body>
+</html>

@@ -1,0 +1,35 @@
+@charset "UTF-8";
+@import "_helper";
+@import "_base";
+@import "_base-preheat";
+@import "_normalize";
+
+html,body {
+	background: #f0f1f2;
+}
+.perf-inner{
+	margin-bottom: 10px;
+}
+.perf-content {
+	margin: 20px;
+	overflow: hidden;
+	.sec-header {
+		margin-left: 2.5%;
+	}
+}
+.item {
+	float: left;
+	width: 45%;
+	margin:0 2.5% 10px;
+	.perf-img {
+		width: 100%;
+	}
+}
+.name {
+	padding-bottom: 2px;
+	font-size: 13px;
+	font-weight: bold;
+}
+.actor {
+	color: #999;
+}

@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+    <meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, width=device-width">
+	<title>亲友团助力</title>
+	<link rel="stylesheet" href="css/support-rank.css">
+</head>
+<body>
+	<div class="support-rank-page" id="vm-main">
+		<ul class="rank-list" v-bind:class="{ show: init.show }">
+			<li v-for="(item, idx) in rankList" v-bind:class="getClass(idx)">
+				<div class="avatar-wrap">	
+					<img v-bind:src="item.headPic">
+					<span class="icon icon-tag">{{ idx+1 }}</span>
+				</div>
+				<div class="info">
+					<span class="name">{{ item.realName }}</span>
+					<span class="flag"><i class="icon icon-flag" v-bind:class="flag(item.followTeamName)"></i>{{ item.followTeamName }}</span>
+					<span class="supt">支持数：
+						<span class="btn btn-blank prize-box">
+							<i class="icon icon-prize"></i>
+							<span class="num">{{ item.followNum }}</span>
+						</span>
+					</span>
+				</div>
+			</li>
+		</ul>
+	</div>
+	<!-- loading -->
+	<div class="dialog-tip" id="dialog-tip-loading"><div class="tip-loading"></div>正在努力获取数据...</div>
+	<!-- loading -->
+	<script data-main="js/app/support-rank.js" src="lib/require.js"></script>
+</body>
+</html>

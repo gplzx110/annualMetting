@@ -1,0 +1,19 @@
+$PAHT_IMG: '../images/';
+
+@function px($value) {
+  @return $value + 0px;
+}
+
+@function rem($value) {
+  @return $value/12 + 0rem;
+}
+
+@mixin helper_bgimg($path) {
+	background: no-repeat url($path);
+	background-size: 100% auto;
+}
+
+@mixin helper_bgimg_y($path) {
+	background-image: url($path);
+	background-size: 100% auto;
+}

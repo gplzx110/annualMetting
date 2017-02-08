@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<title> 跳转中... </title>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+</head>
+<body>
+<script type="text/javascript" src="js/helper/config.js"></script>
+<script type="text/javascript" src="js/helper/comm.js"></script>
+<script type="text/javascript">
+(function(window) {
+
+	var comm = window.comm,
+		_c = window._c,
+		on_day = 24 * 60 * 60 * 1000,
+		identifys = {
+			1: _c.USER_IDE_STAFF,
+			2: _c.USER_IDE_GUEST,
+			3: _c.USER_IDE_FRIEND,
+			4: _c.USER_IDE_VISITOR
+		};
+
+	if(comm.getCache('userId') && comm.getCache('userId') !== comm.getUrlParam('userId')) {
+		window.localStorage.clear();
+	}
+	else {
+		comm.removeCache(_c.CACHE_USER_DELETE);
+	}
+
+	comm.setCache('userId', comm.getUrlParam('userId'));
+	comm.setCache('openId', comm.getUrlParam('openId'));
+	comm.setCache('token', comm.getUrlParam('token'));
+
+	comm.setCache(_c.CACHE_USER_IDE, identifys[comm.getUrlParam('identify')]);
+	
+	if(comm.getUrlParam('deleteFlag') === '1') {
+		comm.setCache(_c.CACHE_USER_DELETE, 1);
+	}
+
+	var current_date = comm.getUrlParam('currentDate'),		
+		begin_day = _c.BEGIN_DAY,
+		begin_day_date = new Date(begin_day).getTime();
+
+	current_date = new Date(current_date).getTime();
+
+	if(current_date < begin_day_date) { // 预告
+		var trailer_date = begin_day_date - current_date,
+			trailer_date = trailer_date/on_day;
+
+		comm.setCache(_c.CACHE_LAST_DAY, trailer_date);
+		window.location.href = './prevhot-index.html?day=' + trailer_date;
+	}
+	else {
+		comm.setCache(_c.CACHE_LAST_DAY, 0);
+		window.location.href = './login.html';
+	}
+
+}(window));
+</script>
+</body>
+</html>

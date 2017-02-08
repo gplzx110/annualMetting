@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>吉胜科技 - 2017年会直播管理后台</title>
+  <link rel="stylesheet" href="lib/bootstrap/css/bootstrap.min.css" />
+  <!-- <link rel="stylesheet" href="lib/bootstrap/css/bootstrap-responsive.min.css" /> -->
+  <link rel="stylesheet" href="lib/bootstrap/css/docs.css" />
+  <link rel="stylesheet" href="css/main.css" />
+</head>
+<body>
+  <div class="navbar navbar-inverse navbar-fixed-top">
+      <div class="navbar-inner">
+        <div class="container">吉胜科技 - 2017年会直播管理后台</div>
+      </div>
+    </div>
+
+  <div class="container hide" v-bind:class="{ show: init.show }" id="vm-main">
+    <div class="row-fluid">
+        <div class="span3 bs-docs-sidebar">
+          <ul class="nav nav-list bs-docs-sidenav affix-top">
+            <li><a href="./setting.htm"><i class="icon-chevron-right"></i> 基础设置</a></li>
+            <li><a href="./reward.htm"><i class="icon-chevron-right"></i> 奖品</a></li>
+            <li><a href="./program.htm"><i class="icon-chevron-right"></i> 节目</a></li>
+            <li><a href="./redbag.htm"><i class="icon-chevron-right"></i> 红包</a></li>
+            <li><a href="./team.htm"><i class="icon-chevron-right"></i> 团队</a></li>
+            <li><a href="./vow.htm"><i class="icon-chevron-right"></i> 许愿树</a></li>
+          </ul>
+        </div>
+
+        <div class="span9 contents">
+
+            <button class="btn btn-primary" type="button" v-on:click="addRedbag()">添加红包</button>
+
+            <form class="form-horizontal" v-show="init.add_show">
+              <div class="control-group">
+                <label class="control-label">红包名称</label>
+                <div class="controls"><input type="text" placeholder="红包名称" v-model.trim="add_item.name" /></div>
+              </div>
+
+              <div class="control-group">
+                <label class="control-label">红包金额</label>
+                <div class="controls"><input type="text" placeholder="（以元为单位）" maxlength="5" v-model.trim="add_item.money" /></div>
+              </div>
+
+              <div class="control-group">
+                <label class="control-label">红包个数</label>
+                <div class="controls">
+                  <input type="text" v-model.trim.number="add_item.num" maxlength="5" />
+                  <span class="btn btn-mini btn-success" v-on:click="resetNum()">重置个数</span>
+                </div>
+              </div>
+
+              <div class="control-group">
+                <label class="control-label">红包类型</label>
+                <div class="controls">
+                  <select v-model="add_item.type" v-on:change="getRedbagNum()">
+                    <option value="1">场内</option>
+                    <option value="2">场外</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="control-group" v-if="add_item.type == 2"> <!-- 场外红包 -->
+                <label class="control-label">所属节目</label>
+                <div class="controls">
+                  <select multiple="multiple" id="program-list" style="height: 160px;" v-if="program_list.length">
+                      <option v-for="opt in program_list" v-bind:value="opt.id">{{ opt.name }}</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="control-group">
+                <div class="controls">
+                  <span class="btn btn-primary" v-on:click="addItem()">保存</span>
+                  <span class="btn" v-on:click="init.add_show = false">取消</span>
+                </div>
+              </div>
+            </form>
+
+            <table class="table table-hover" v-show="! init.add_show">
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>红包名称</th>
+                  <th>总金额</th>
+                  <th>个数</th>
+                  <th>类型</th>
+                  <th>状态</th>
+                  <th>操作</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr v-for="item in list">
+                  <td>{{ item.id }}</td>
+                  <td>{{ item.name }}</td>
+                  <td>{{ item.money }}</td>
+                  <td>{{ item.num }}</td>
+                  <td v-html="item.type_str"></td>
+                  <td v-html="item.status_str"></td>
+                  <td>
+                    <span class="btn btn-mini btn-primary" 
+                      v-if="item.type == 2 && item.status == 0 " 
+                      v-on:click="openRedbag(item.id)">
+                      开启场外红包
+                    </span>
+                    <span class="btn btn-mini btn-success" 
+                      v-else-if="item.type == 1 && item.status == 0 " 
+                      v-on:click="startRedbag(item.id)">
+                      开抢场内红包
+                    </span>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+        </div>
+    </div>
+  </div>
+
+</body>
+</html>
+
+<script type="text/javascript" src="lib/jquery/jquery.min.js"></script>
+<script type="text/javascript" src="lib/vue.js"></script>
+<script type="text/javascript" src="js/comm.js"></script>
+<script type="text/javascript">
+(function() {
+
+  var o_types = {
+      1: '<span class="text-info">场内</span>',
+      2: '<span class="text-success">场外</span>'
+    },
+    o_status = {
+      0: '<span class="text-warning">未开启</span>',
+      1: '<span class="text-info">已开启</span>'
+    };
+
+  var vm = new Vue({
+      el: '#vm-main',
+      data: {
+        init: {
+            show: true,
+            add_show: false
+        },
+        add_item: {
+            name: '',
+            money: '',
+            num: '',
+            type: 1,
+            programId: ''
+        },
+        program_list: [],
+        list: [],
+      },
+      methods: {
+        addRedbag: function() {
+            this.init.add_show = true;
+            this.getRedbagNum();
+        },
+        getRedbagNum: function() {
+            app.getRedbagNum();
+        },
+        resetNum: function() {
+            if(this.add_item.type === 1) {
+                this.add_item.programId = '';
+            }
+            else {
+                var $program_list = $('#program-list');
+                if($program_list.length && $program_list.val()) {
+                    this.add_item.programId = $program_list.val().join(',');
+                }
+                else {
+                    this.add_item.programId = '';
+                }
+            }
+
+            this.getRedbagNum();
+        },
+        addItem: function() {
+            var _this = this,
+              params = this.add_item;
+
+            if(params.type === 1) { // 场内
+                params.programId = '';
+            }
+            else {
+                var $program_list = $('#program-list');
+                if($program_list.length && $program_list.val()) {
+                    params.programId = $program_list.val().join(',');
+                }
+                else {
+                    params.programId = '';
+                }
+            }
+
+            comm.ajax('/back/addRedBag.html', {params: params, type: 'POST'}, function(response) {
+               if(! response) {
+                  return;
+               }
+
+               _this.init.add_show = false;
+               _this.add_item = {
+                  name: '',
+                  money: '',
+                  num: '',
+                  type: 1,
+                  programId: ''
+                };
+
+                app.initList();
+            });
+        },
+        openRedbag: function(id) {
+            if(window.confirm('确定要开启场外红包么？')) {
+                comm.ajax('/back/startRedBag.html', {params: {id: id}}, function(response) {
+                    if(! response) {
+                      return;
+                    }
+
+                    app.initList();
+                });
+            }
+        },
+        startRedbag: function(id) {
+            if(window.confirm('确定要开抢场内红包么？')) {
+                comm.ajax('/back/startRedBag.html', {params: {id: id}}, function(response) {
+                    if(! response) {
+                      return;
+                    }
+
+                    app.initList();
+                });
+            }
+        }
+      }
+  });
+
+  var app = {
+      getRedbagNum: function(type, programId) {
+          type = type || vm.add_item.type;
+          programId = programId || vm.add_item.programId;
+
+          comm.ajax('/back/getRedBagCount.html', {params: {type: type, programId: programId}}, function(response) {
+              if(! response) {
+                return;
+              }
+
+              vm.add_item.num = response.data;            
+          });
+      },
+      initList: function() {
+        comm.ajax('/back/backFindRedBagList.html', {}, function(response) {
+            for (var i = 0; i < response.data.list.length; i++) {
+                response.data.list[i].status_str = o_status[response.data.list[i].status];
+                response.data.list[i].type_str = o_types[response.data.list[i].type];
+            }
+
+            vm.list = response.data.list;
+        });
+      },
+      initProgram: function() {
+          comm.ajax('/back/backFindProgramList.html', {}, function(response) {
+            var arr = [];
+            for (var i = 0; i < response.data.list.length; i++) {
+                arr[i] = {id: response.data.list[i].id, name: response.data.list[i].name};
+            }
+
+            vm.program_list = arr;
+        });
+      },
+      init: function() {
+        this.initList();
+        this.initProgram();
+      }
+  };
+
+  app.init();
+
+}());
+</script>

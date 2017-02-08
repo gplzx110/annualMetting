@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<title> 个人中心 </title>
+<meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, width=device-width" />
+<link rel="stylesheet" type="text/css" href="css/user.css" />
+</head>
+<body>
+
+<div class="m-contents user-index" id="vm-main" v-bind:class="{ show: init.show }">
+	<div class="top" v-bind:class="[userInfo.teamColor]">
+		<div class="user-info">
+			<div class="head"><img v-bind:src="userInfo.headPic" /></div>
+			<div class="name">{{ userInfo.userName }}</div>
+			<div class="info">{{ userInfo.userTitle }}<br />{{ userInfo.userSubTitle }}</div>
+		</div>
+
+		<div class="user-id">用户ID：{{ user.id }}</div>
+
+		<div class="rank-sorce">
+			<div>
+				<img src="images/user/ico-team-rank.png" class="ico-team-rank" />
+				<div class="detai">团队当前得分<div class="sorce">{{ userInfo.teamScore }}</div></div>
+			</div>
+			<div>
+				<img src="images/user/ico-team-cup.png" class="ico-team-cup" />
+				<div class="detai">团队当前排名<div class="sorce">{{ userInfo.teamRank }}</div></div>
+			</div>
+		</div>
+	</div>
+
+	<div class="spport-rank" v-on:click="goUrl('./support-rank.html')"><span>支持排行榜</span></div>
+
+	<!-- 员工||嘉宾 福袋 -->
+	<div class="fcard" v-if="(user.is_staff || user.is_guest) && cards.length">
+		<div class="title"><span>我的福袋</span></div>
+		<div class="list">
+			<div class="card" 
+				v-for="card in cards"
+					v-on:click="dialogShowCard(card.name)"
+			>
+				<div class="puls" v-if="card.is_plus">
+					<div class="rate"><span>X</span> {{ card.rate }}%</div>
+					<img v-bind:src="'images/cards/'+ card.img +'-s.png'" v-bind:alt="card.name" />
+				</div>
+				<img v-else v-bind:src="'images/cards/'+ card.img +'-s.png'" v-bind:alt="card.name" />
+			</div>
+		</div>
+	</div>
+
+	<div class="mbag" v-if="! user.is_visitor">
+		<div class="fl title">钱包余额：<span>{{ userInfo.money }}元</span></div>
+		<div class="getcash fr" onclick="window.location.href='./user-mlist.html'">提 现</div>
+		<div class="rechange fr" v-if="user.is_staff || user.is_guest" v-on:click="rechargeCash()">充 值</div><!-- 员工 -->
+	</div>
+
+	<!-- 员工 -->
+	<div class="mbag-detail" v-if="user.is_staff || user.is_guest">
+		<div>奖品下注金额<span class="fr">{{ userInfo.betMoney }}元</span></div>
+		<div>福包抽奖金额
+			<span class="fr" v-if="userInfo.redBagMoney > 0 && userInfo.moneyRate > 0">{{ userInfo.redBagMoney }}元 X {{ userInfo.moneyRatePer }}% 加成卡奖励</span>
+			<span class="fr" v-else>0元</span>
+		</div>
+	</div>
+
+	<!-- 亲友 -->
+	<div class="mbag-detail" v-if="user.is_friend">
+		<table>
+			<tbody>
+				<tr v-for="it in userInfo.moneyFlowList">
+					<td>{{ it.remark }}</td>
+					<td>{{ it.obtainTime }}</td>
+					<td><span class="red">{{ it.money }}元</span></td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+
+
+	<div class="bottom-menu-station"></div>
+
+	<!-- 导航菜单 -->
+	<div is="tpl_bottom_menu" 
+			v-bind:sed_self="true"
+			v-bind:user="user"
+			v-bind:txt_blessing="(user.is_staff || user.is_guest) ? '福卡' : '红包'"
+	></div>
+
+	<div class="modal-layout" v-bind:class="{ show: layout_show }" v-on:click="closeLayout()"></div>
+
+	<!-- 卡说明 -->
+	<div class="dialog-card-note"></div>
+
+	<!-- 充值 -->
+	<div class="dialog-recharge" v-bind:class="{ show: recharge.show }">
+		<div class="form">
+			<div class="fl">充值</div>
+			<div class="fr">
+				<input type="tel" name="money" maxlength="4" v-model.number="recharge.money" />
+				<div class="mt10">请输入充值金额</div>
+			</div>
+			<div class="clear"></div>
+		</div>
+
+		<div class="btn-submit mt20" v-on:click="rechargePay()">确定</div>
+	</div>
+
+	<div class="w-msgbox" v-bind:class="{ show: recharge.confirm_show }">
+	    <div class="w-msgbox-close" v-on:click="recharge.confirm_show = false; layout_show = false">×</div>
+	    <div class="w-msgbox-bd">
+	        <h3 class="w-msgbox-title">请确认充值是否完成</h3>
+	    </div>
+	    <div class="w-msgbox-ft w-msgbox-ft-2">
+	        <button class="pro-btn js-btn-finsh" type="button" v-on:click="checkOrder()"><span>完成充值</span></button>
+	        <button class="pro-btn js-btn-try" type="button" v-on:click="tryOrder()"><span>重试</span></button>
+	    </div>
+	</div>
+
+	<!-- 卡说明 -->
+	<div class="w-msgbox dialog-card-desc" v-bind:class="{ show: modal_card.show }">
+	    <div class="w-msgbox-close" v-on:click="modal_card.show = false; layout_show = false">×</div>
+	    <div class="w-msgbox-bd">
+	        <h3 class="w-msgbox-title">{{ modal_card.name }}说明</h3>
+	    </div>
+	    <div class="w-msgbox-ft">{{ modal_card.desc }}</div>
+	</div>
+
+	<!-- 提示框 --><div is="dialogtip" v-bind:tip="tip"></div>
+
+</div>
+
+
+<div class="dialog-tip" id="dialog-tip-loading"><div class="tip-loading"></div>正在努力获取数据...</div>
+
+<script data-main="js/app/user-index.js" src="lib/require.js"></script>
+</body>
+</html>

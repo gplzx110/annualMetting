@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<title> 提现 </title>
+<meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, width=device-width" />
+<link rel="stylesheet" type="text/css" href="css/user.css" />
+</head>
+<body>
+
+<div class="m-contents user-mlist" id="vm-main" v-bind:class="{ show: init.show }">
+	<div class="mbag"><div class="it">我的钱包余额<span>{{ detail.money }}元</span></div></div>
+	<div class="mcash">
+		<div class="it">我可提现金额<span>{{ detail.money }}元</span></div>
+		<i v-on:click="getCashToWX()" v-if="! get_cash_ing">提现至微信账户</i>
+		<i class="grayscale100" v-if="get_cash_ing">稍等，提取中...</i>
+		<div class="clear"></div>
+	</div>
+
+	<div class="tt" v-if="detail.moneyFlowList.length">现金记录</div>
+	<div class="dlist" v-if="detail.moneyFlowList.length">
+		<table>
+			<tbody>
+				<tr v-for="item in detail.moneyFlowList">
+					<td>{{ item.remark }}</td><td>{{ item.obtainTime }}</td><td><span>{{ item.money }}元</span></td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+
+	<!-- 提示框 --><div is="dialogtip" v-bind:tip="tip"></div>
+</div>
+
+
+<div class="dialog-tip" id="dialog-tip-loading"><div class="tip-loading"></div>正在努力获取数据...</div>
+
+<script data-main="js/app/user-mlist.js" src="lib/require.js"></script>
+</body>
+</html>

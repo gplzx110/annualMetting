@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+    <meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, width=device-width">
+	<title>亲友团助力</title>
+	<link rel="stylesheet" href="css/support.css?t=2444">
+</head>
+<body>
+	<div class="support-page" id="vm-main">
+		<div v-bind:class="{ show: init.show }" style="display: none;">
+			<div class="srh-wrap" v-bind:class="{ show: search.showSrh }">
+				<div class="cont-right">
+					<!-- <span v-on:click="searchWorker" class="btn btn-warn btn-srh">搜索</span> -->
+					<span class="qst-wrap" v-on:click="showExplain"><i class="icon icon-qst"></i>说明</span>
+				</div>
+				<div class="cont-left">
+					<input v-model.trim="search.srhValue" v-on:input="searchWorker" type="text" placeholder="搜索你要支持的吉胜员工，有机会得大奖">
+				</div>
+			</div>
+			<div v-if="supportInfo.realName" class="employee-info">
+				<p class="title" v-bind:class="{ show: user.is_friend}">您助力的吉胜员工，期待他精彩亮相吧！<span class="qst-wrap" v-on:click="showExplain"><i class="icon icon-qst"></i>说明</span></p>
+				<p class="title" v-bind:class="{ show: user.is_staff }">
+					<span v-if="supportInfo.followNum !=0">您当前已获得<span class="supt-num">{{ supportInfo.followNum }}名</span>亲友助力支持<span class="supt-rank">(排名{{ supportInfo.rank }})</span></span>
+					<span v-else>还未获得亲友支持，赶紧加油！</span>
+				</p>
+				<div class="avatar-box">
+					<img v-bind:src="supportInfo.headPic">
+					<span class="icon icon-tag">{{ supportInfo.rank }}</span>
+				</div>
+				<div class="bottom">
+					<div>	
+						<span class="name">{{ supportInfo.realName }}</span>
+						<span class="flag"><i class="icon icon-flag" v-bind:class="supportInfo.followTeamName==='红队'? '': supportInfo.followTeamName==='蓝队'? 'icon-flag-blue': 'icon-flag-yellow'"></i>{{ supportInfo.followTeamName }}</span>
+					</div>
+					<div class="ell">{{ supportInfo.position }}</div>
+					<div v-if="supportInfo.bestFlag === 1">2015年优秀员工</div>
+					<div v-if="supportInfo.bestFlag === 2">2015年优秀管理者</div>
+					<div>
+						<span>支持数：<span>{{ supportInfo.followNum }}</span></span>
+						<span v-if="!user.is_staff" v-on:click="unsupport()" class="btn btn-blank">{{ supportInfo.supportStatus }}</span>
+					</div>
+					<div class="btn btn-blank btn-rank">
+						<a href="support-rank.html">
+							<i class="icon icon-menu"></i>查看支持排行榜
+						</a>
+					</div>
+				</div>
+				<div v-show="supportInfo.followHeadPic" class="friends">
+					<span class="txt">亲友团</span>
+					<div class="friends-list">
+						<img v-for="item in supportInfo.followHeadPic" v-bind:src="item">
+						<span v-show="supportInfo.showSupportTxt" v-on:click="showSupportAll" class="more-sup-btn">{{ supportInfo.showSupportTxt }}</span>
+					</div>
+				</div>
+			</div>
+			<div class="employee-container">
+				<div v-show="showGoodWorker" class="excellent-employee">
+					<div class="sec-header">
+						2015年优秀员工
+					</div>
+					<ul class="emp-list" id="js-excel-employee-list">
+						<employee v-for="item in emp_list.goodWorker" v-bind:item="item"></employee>
+					</ul>
+				</div>
+				<div v-show="showGoodGover" class="excellent-gover">
+					<div class="sec-header">
+						2015年优秀管理者
+					</div>
+					<ul class="emp-list" id="js-excel-gover-list">
+						<employee v-for="item in emp_list.goodGover" v-bind:item="item"></employee>
+					</ul>
+				</div>
+				<div class="all-employee" id="js-all-employee">
+					<div class="sec-header">
+						全体员工
+					</div>
+					<ul class="emp-list">
+						<employee v-for="item in emp_list.all" v-bind:item="item"></employee>
+					</ul>
+					<div v-show="search.showEmptySrh" class="empty-srh">
+						当前没有您要搜索的数据
+					</div>
+				</div>
+			</div>
+			<div class="first-letter">
+				<span v-for="cap in emp_list.cap" v-on:click="srhWorksByInitial" class="initial">{{ cap }}</span>
+			</div>
+
+			<!-- 提示框 -->
+			<div class="modal-layout" v-bind:class="{ show: tip.show }" v-on:click="tip.show = !tip.show"></div>
+			<div class="msg-tip" v-bind:class="{ show: tip.show }">
+				<div class="msg" v-html="tip.msg">
+					{{ tip.msg }}
+				</div>
+				<div class="btn-submit mt20" v-on:click="tip.show = !tip.show">确定</div>
+			</div>
+			<!-- 提示框 -->
+		</div>
+		<!-- loading -->
+		<div class="dialog-tip" id="dialog-tip-loading"><div class="tip-loading"></div>正在努力获取数据...</div>
+		<!-- loading -->
+	</div>
+	<script data-main="js/app/support.js?t=66222564766" src="lib/require.js"></script>
+</body>
+</html>
